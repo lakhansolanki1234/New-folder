@@ -130,18 +130,11 @@ const InputField = () => {
         <button onClick={closeModal} >Close</button>
         <button type='submit'>Submit</button>
         </form>
-      {/* <Modal
-        isOpen={isModalOpen}
-        onRequestClose={closeModal}
-        contentLabel="Edit Input Field"
-        className="modal-content"
-        overlayClassName="modal-overlay"
-        sx={{position:"fixed",height:"100%",width:"40%",right:"0",top:"0"}}
-      >
+      
         
-      </Modal> */}
+      </Modal>
       </div>
-    </div>
+  
   );
 };
 
