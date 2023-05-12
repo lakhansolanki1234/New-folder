@@ -10,6 +10,8 @@ const InputField = () => {
   const[height,setheight]=useState('30px');
   const[clas,setclasses]=useState('formcontrol')
   const [font, setFont] = useState('Arial');
+  const [backgroundColor1, setBackgroundColor] = useState('rgb(255, 255, 255)');
+
 
   const handleEditClick = () => {
     setIsModalOpen(true);
@@ -21,6 +23,12 @@ const InputField = () => {
   const handleFontChange = (e) => {
     setFont(e.target.value);
   };
+  const handleBackgroundColorChange = (value) => {
+    if (value) {
+      setBackgroundColor(value);
+    }
+  };
+
 
   return (
     <div className="input-field">
@@ -28,7 +36,7 @@ const InputField = () => {
         <span className="delete-icon">x</span>
         <img src={edit} className="edit-icon" onClick={handleEditClick}/>
       </div>
-      <input type="text" style={{width:`${width}`,height:`${height}`,fontFamily:`${font}`}} className={`${clas}`} />
+      <input type="text" style={{width:`${width}`,height:`${height}`,fontFamily:`${font}`,backgroundColor:`${backgroundColor1}`}} className={`${clas}`} />
 
       <Modal
         isOpen={isModalOpen}
@@ -69,6 +77,13 @@ const InputField = () => {
               </select>
             </label>
           </div>
+          <div className="modal-row">
+  <label>
+    Background
+    <input type="color" value={backgroundColor1} onChange={(e) => handleBackgroundColorChange(e?.target?.value)} />
+  </label>
+</div>
+
         <div className="modal-row">
           <label>
             Help Text:
