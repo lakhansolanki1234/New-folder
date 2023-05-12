@@ -1,62 +1,34 @@
 import React, { useState } from 'react';
-import { useDrag, useDrop, DndProvider } from 'react-dnd';
+import { useDrop, DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
-import Draggable from 'react-draggable';
 import './App.css';
-import YourComponent from './component/show';
 import InputField from './component/Text';
 import Textarea from './component/Textarea';
 import RadioButton from './component/RadioButton';
 
-const FormComponent = ({ component, index, moveComponent }) => {
-  const [{ isDragging }, dragRef] = useDrag(() => ({
-    type: 'form-component',
-    item: { index },
-    collect: (monitor) => ({
-      isDragging: monitor.isDragging(),
-    }),
-  }));
-
-  const [, dropRef] = useDrop(() => ({
-    accept: 'form-component',
-  }));
-
-  return (
-    <div
-      ref={(node) => dragRef(dropRef(node))}
-      className={`form-component ${isDragging ? 'dragging' : ''}`}
-    >
-      {component}
-    </div>
-  );
-};
-
 const App = () => {
   const [formComponents, setFormComponents] = useState([]);
-
-  const handleComponentClick = (component) => {
-    setFormComponents([...formComponents, component]);
-  };
-
-  const moveComponent = (fromIndex, toIndex) => {
-    const components = [...formComponents];
-    const component = components[fromIndex];
-    components.splice(fromIndex, 1);
-    components.splice(toIndex, 0, component);
-    setFormComponents(components);
-  };
 
   const handleDrop = (event) => {
     event.preventDefault();
     const text = event.dataTransfer.getData('text/plain');
+    const dropPosition = event.clientY;
 
     if (text === 'Text Field') {
-      handleComponentClick(<InputField />);
+      handleComponentClick(<InputField />, dropPosition);
     } else if (text === 'Text Area') {
-      handleComponentClick(<Textarea />);
+      handleComponentClick(<Textarea />, dropPosition);
     } else if (text === 'Radio') {
-      handleComponentClick(<RadioButton />);
+      handleComponentClick(<RadioButton />, dropPosition);
     }
+  };
+
+  const handleComponentClick = (component, dropPosition) => {
+    setFormComponents((prevComponents) => {
+      const updatedComponents = [...prevComponents];
+      updatedComponents.push({ component, position: dropPosition });
+      return updatedComponents;
+    });
   };
 
   const handleDragStart = (event, text) => {
@@ -69,15 +41,18 @@ const App = () => {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    // Handle form submission
+    const formJson = JSON.stringify(formComponents);
+    localStorage.setItem('data2', formJson);
+    console.log(formJson);
+    // You can now do whatever you want with the form JSON, such as sending it to a server to save it to a database
   };
 
   return (
     <DndProvider backend={HTML5Backend}>
       <div className="container">
         <div className="form-builder">
-          <Draggable onStart={() => false}>
-            <button onClick={() => handleComponentClick('Text Field')}>
+          <div className="draggable-item">
+            <button>
               <span
                 draggable
                 onDragStart={(event) => {
@@ -87,9 +62,9 @@ const App = () => {
                 Text Field
               </span>
             </button>
-          </Draggable>
-          <Draggable onStart={() => false}>
-            <button onClick={() => handleComponentClick('Text Area')}>
+          </div>
+          <div className="draggable-item">
+            <button>
               <span
                 draggable
                 onDragStart={(event) => {
@@ -99,9 +74,9 @@ const App = () => {
                 Text Area
               </span>
             </button>
-          </Draggable>
-          <Draggable onStart={() => false}>
-            <button onClick={() => handleComponentClick('Radio')}>
+          </div>
+          <div className="draggable-item">
+            <button>
               <span
                 draggable
                 onDragStart={(event) => {
@@ -111,29 +86,25 @@ const App = () => {
                 Radio
               </span>
             </button>
-          </Draggable>
+          </div>
         </div>
-        <div
-          className="drop-zone whiteboard"
-          onDrop={handleDrop}
-          onDragOver={handleDragOver}
->
-<div className="grid-container">
-{formComponents.map((component, index) => (
-<div key={index} className="grid-item">
-<FormComponent
-               index={index}
-               component={component}
-               moveComponent={moveComponent}
-             />
-</div>
-))}
-</div>
-<button type="submit" onClick={handleSubmit}>Submit</button>
-</div>
-</div>
-</DndProvider>
-);
-};
-
-export default App;
+        <div className="drop-zone whiteboard" onDrop={handleDrop} onDragOver={handleDragOver}>
+          <form onSubmit={handleSubmit}>
+            {formComponents.map((component, index) => (
+              <div
+                key={index}
+                className="form-component"
+                style={{ top: component.position }}
+                >
+                {component.component}
+                </div>
+                ))}
+                <button type="submit">Submit</button>
+                </form>
+                </div>
+                </div>
+                </DndProvider>
+                );
+                };
+                
+                export default App;
