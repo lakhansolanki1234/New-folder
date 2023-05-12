@@ -9,6 +9,7 @@ const InputField = () => {
   const[width,setwidth]=useState('300px');
   const[height,setheight]=useState('30px');
   const[clas,setclasses]=useState('formcontrol')
+  const [font, setFont] = useState('Arial');
 
   const handleEditClick = () => {
     setIsModalOpen(true);
@@ -17,6 +18,9 @@ const InputField = () => {
   const closeModal = () => {
     setIsModalOpen(false);
   };
+  const handleFontChange = (e) => {
+    setFont(e.target.value);
+  };
 
   return (
     <div className="input-field">
@@ -24,7 +28,7 @@ const InputField = () => {
         <span className="delete-icon">x</span>
         <img src={edit} className="edit-icon" onClick={handleEditClick}/>
       </div>
-      <input type="text" style={{width:`${width}`,height:`${height}`}} className={`${clas}`} />
+      <input type="text" style={{width:`${width}`,height:`${height}`,fontFamily:`${font}`}} className={`${clas}`} />
 
       <Modal
         isOpen={isModalOpen}
@@ -53,6 +57,18 @@ const InputField = () => {
             <input type="text"  value={height} onChange={(e)=> setheight(e.target.value)}/>
           </label>
         </div>
+        <div className="modal-row">
+            <label>
+              Font:
+              <select value={font} onChange={handleFontChange}>
+                <option value="Arial">Arial</option>
+                <option value="Helvetica">Helvetica</option>
+                <option value="Times New Roman">Times New Roman</option>
+                <option value="Courier New">Courier New</option>
+                <option value="Verdana">Verdana</option>
+              </select>
+            </label>
+          </div>
         <div className="modal-row">
           <label>
             Help Text:
