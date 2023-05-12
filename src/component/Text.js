@@ -36,7 +36,7 @@ const InputField = () => {
         <span className="delete-icon">x</span>
         <img src={edit} className="edit-icon" onClick={handleEditClick}/>
       </div>
-      <input type="text" style={{width:`${width}`,height:`${height}`,fontFamily:`${font}`,backgroundColor:`${backgroundColor1}`}} className={`${clas}`} />
+      <input type="text" style={{width:`${width}`,height:`${height}`,fontFamily:`${font}`}} className={`${clas}`} />
 
       <Modal
         isOpen={isModalOpen}
@@ -130,7 +130,17 @@ const InputField = () => {
         <button onClick={closeModal} >Close</button>
         <button type='submit'>Submit</button>
         </form>
-      </Modal>
+      {/* <Modal
+        isOpen={isModalOpen}
+        onRequestClose={closeModal}
+        contentLabel="Edit Input Field"
+        className="modal-content"
+        overlayClassName="modal-overlay"
+        sx={{position:"fixed",height:"100%",width:"40%",right:"0",top:"0"}}
+      >
+        
+      </Modal> */}
+      </div>
     </div>
   );
 };
