@@ -39,39 +39,6 @@ const FormComponent = ({ component, index, moveComponent }) => {
 
 const App = () => {
   const [formComponents, setFormComponents] = useState([]);
-  const handleDragStop = (event, component) => {
-    const { pageX, pageY } = event;
-    const dropZoneRect = document.querySelector('.drop-zone').getBoundingClientRect();
-  
-    if (
-      pageX >= dropZoneRect.left &&
-      pageX <= dropZoneRect.right &&
-      pageY >= dropZoneRect.top &&
-      pageY <= dropZoneRect.bottom
-    ) {
-      handleComponentClick(component);
-    }
-  }
-  
-  const handleDrop = (event) => {
-    event.preventDefault();
-    const component = JSON.parse(event.dataTransfer.getData('component'));
-    handleComponentClick(component);
-  };
-
-  const handleDragOver = (event) => {
-    event.preventDefault();
-  };
-  
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    localStorage.setItem('data',formComponents)
-    const formJson = JSON.stringify(formComponents);
-    localStorage.setItem("data2",formJson)
-    console.log(formJson);
-    // You can now do whatever you want with the form JSON, such as sending it to a server to save it to a database
-  };
-
   const handleComponentClick = (component) => {
     setFormComponents([...formComponents, component]);
   };
@@ -83,16 +50,60 @@ const App = () => {
     components.splice(toIndex, 0, component);
     setFormComponents(components);
   };
+  const handleDragStop = (event, component) => {
+    const { pageX, pageY } = event;
+    const dropZoneRect = document.querySelector('.drop-zone').getBoundingClientRect();
+
+    if (
+      pageX >= dropZoneRect.left &&
+      pageX <= dropZoneRect.right &&
+      pageY >= dropZoneRect.top &&
+      pageY <= dropZoneRect.bottom
+    ) {
+      handleComponentClick(component);
+    }
+  };
+
+  const handleDrop = (event) => {
+    event.preventDefault();
+    const text = event.dataTransfer.getData('text/plain');
+    handleComponentClick(<InputField />);
+  };
+
+  const handleDragStart = (event, text) => {
+    event.dataTransfer.setData('text/plain', text);
+  };
+
+  const handleDragOver = (event) => {
+    event.preventDefault();
+  };
+
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    localStorage.setItem('data',formComponents)
+    const formJson = JSON.stringify(formComponents);
+    localStorage.setItem("data2",formJson)
+    console.log(formJson);
+    // You can now do whatever you want with the form JSON, such as sending it to a server to save it to a database
+  };
+
+  
 
   return (
     <DndProvider backend={HTML5Backend}>
       <div className="container">
         <div className="form-builder">
-        <Draggable onStop={(event) => handleDragStop(event, <InputField />)}>
+        <Draggable onStart={() => false}>
           <button onClick={() => handleComponentClick(
         <InputField/>
           )}>
-            Text Field
+            <span
+              draggable
+              onDragStart={(event) => {handleDragStart(event, 'Text Field')}}
+            >
+              Text Field
+            </span>
           </button>
           </Draggable>
           <button onClick={() => handleComponentClick(<Textarea/>)}>
@@ -102,8 +113,8 @@ const App = () => {
             Radio
           </button>
         </div>
-        <div className="drop-zone" onDrop={handleDrop} onDragOver={handleDragOver}>
-        <div className="whiteboard">
+        <div className="drop-zone whiteboard" onDrop={handleDrop} onDragOver={handleDragOver}>
+        <div className="">
           <form onSubmit={handleSubmit}>
             {formComponents.map((component, index) => (
               <FormComponent
