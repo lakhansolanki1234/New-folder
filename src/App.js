@@ -19,12 +19,6 @@ const FormComponent = ({ component, index, moveComponent }) => {
 
   const [, dropRef] = useDrop(() => ({
     accept: 'form-component',
-    hover: (item, monitor) => {
-      if (item.index !== index) {
-        moveComponent(item.index, index);
-        item.index = index;
-      }
-    },
   }));
 
   return (
@@ -39,6 +33,7 @@ const FormComponent = ({ component, index, moveComponent }) => {
 
 const App = () => {
   const [formComponents, setFormComponents] = useState([]);
+
   const handleComponentClick = (component) => {
     setFormComponents([...formComponents, component]);
   };
@@ -50,24 +45,18 @@ const App = () => {
     components.splice(toIndex, 0, component);
     setFormComponents(components);
   };
-  const handleDragStop = (event, component) => {
-    const { pageX, pageY } = event;
-    const dropZoneRect = document.querySelector('.drop-zone').getBoundingClientRect();
-
-    if (
-      pageX >= dropZoneRect.left &&
-      pageX <= dropZoneRect.right &&
-      pageY >= dropZoneRect.top &&
-      pageY <= dropZoneRect.bottom
-    ) {
-      handleComponentClick(component);
-    }
-  };
 
   const handleDrop = (event) => {
     event.preventDefault();
     const text = event.dataTransfer.getData('text/plain');
-    handleComponentClick(<InputField />);
+
+    if (text === 'Text Field') {
+      handleComponentClick(<InputField />);
+    } else if (text === 'Text Area') {
+      handleComponentClick(<Textarea />);
+    } else if (text === 'Radio') {
+      handleComponentClick(<RadioButton />);
+    }
   };
 
   const handleDragStart = (event, text) => {
@@ -78,60 +67,73 @@ const App = () => {
     event.preventDefault();
   };
 
-
   const handleSubmit = (event) => {
     event.preventDefault();
-    localStorage.setItem('data',formComponents)
-    const formJson = JSON.stringify(formComponents);
-    localStorage.setItem("data2",formJson)
-    console.log(formJson);
-    // You can now do whatever you want with the form JSON, such as sending it to a server to save it to a database
+    // Handle form submission
   };
-
-  
 
   return (
     <DndProvider backend={HTML5Backend}>
       <div className="container">
         <div className="form-builder">
-        <Draggable onStart={() => false}>
-          <button onClick={() => handleComponentClick(
-        <InputField/>
-          )}>
-            <span
-              draggable
-              onDragStart={(event) => {handleDragStart(event, 'Text Field')}}
-            >
-              Text Field
-            </span>
-          </button>
+          <Draggable onStart={() => false}>
+            <button onClick={() => handleComponentClick('Text Field')}>
+              <span
+                draggable
+                onDragStart={(event) => {
+                  handleDragStart(event, 'Text Field');
+                }}
+              >
+                Text Field
+              </span>
+            </button>
           </Draggable>
-          <button onClick={() => handleComponentClick(<Textarea/>)}>
-            Text Area
-          </button>
-          <button onClick={() => handleComponentClick(<RadioButton/>)}>
-            Radio
-          </button>
+          <Draggable onStart={() => false}>
+            <button onClick={() => handleComponentClick('Text Area')}>
+              <span
+                draggable
+                onDragStart={(event) => {
+                  handleDragStart(event, 'Text Area');
+                }}
+              >
+                Text Area
+              </span>
+            </button>
+          </Draggable>
+          <Draggable onStart={() => false}>
+            <button onClick={() => handleComponentClick('Radio')}>
+              <span
+                draggable
+                onDragStart={(event) => {
+                  handleDragStart(event, 'Radio');
+                }}
+              >
+                Radio
+              </span>
+            </button>
+          </Draggable>
         </div>
-        <div className="drop-zone whiteboard" onDrop={handleDrop} onDragOver={handleDragOver}>
-        <div className="">
-          <form onSubmit={handleSubmit}>
-            {formComponents.map((component, index) => (
-              <FormComponent
-                key={index}
-                index={index}
-                component={component}
-                moveComponent={moveComponent}
-              />
-            ))}
-            <button type="submit">Submit</button>
-          </form>
-        </div>
-      </div>
-      </div>
-    </DndProvider>
-  //  <YourComponent/>
-  );
+        <div
+          className="drop-zone whiteboard"
+          onDrop={handleDrop}
+          onDragOver={handleDragOver}
+>
+<div className="grid-container">
+{formComponents.map((component, index) => (
+<div key={index} className="grid-item">
+<FormComponent
+               index={index}
+               component={component}
+               moveComponent={moveComponent}
+             />
+</div>
+))}
+</div>
+<button type="submit" onClick={handleSubmit}>Submit</button>
+</div>
+</div>
+</DndProvider>
+);
 };
 
 export default App;
