@@ -8,7 +8,7 @@ const InputField = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const[width,setwidth]=useState('300px');
   const[height,setheight]=useState('30px');
-  const[clas,setclasses]=useState('formcontrol')
+  const[clas,setclasses]=useState('form__input')
   const [font, setFont] = useState('Arial');
   const [backgroundColor1, setBackgroundColor] = useState('rgb(255, 255, 255)');
 
@@ -36,13 +36,13 @@ const InputField = () => {
         <span className="delete-icon">x</span>
         <img src={edit} className="edit-icon" onClick={handleEditClick}/>
       </div>
-      <input type="text" style={{width:`${width}`,height:`${height}`,fontFamily:`${font}`}} className={`${clas}`} />
+      <input type="text" style={{width:`${width}`,height:`${height}`,fontFamily:`${font}`,color:`${backgroundColor1}`}} className={`${clas}`} />
 
       <Modal
         isOpen={isModalOpen}
         onRequestClose={closeModal}
         contentLabel="Edit Input Field"
-        className="modal-content"
+        className="editboard"
         overlayClassName="modal-overlay"
       >
         <form>
@@ -79,7 +79,7 @@ const InputField = () => {
           </div>
           <div className="modal-row">
   <label>
-    Background
+    Text Color
     <input type="color" value={backgroundColor1} onChange={(e) => handleBackgroundColorChange(e?.target?.value)} />
   </label>
 </div>

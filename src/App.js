@@ -5,8 +5,9 @@ import './App.css';
 import InputField from './component/Text';
 import Textarea from './component/Textarea';
 import RadioButton from './component/RadioButton';
-
+import ResponsiveAppBar from './component/Navbar';
 const App = () => {
+
   const [formComponents, setFormComponents] = useState([]);
 
   const handleDrop = (event) => {
@@ -47,23 +48,25 @@ const App = () => {
     // You can now do whatever you want with the form JSON, such as sending it to a server to save it to a database
   };
 
-  return (
+  return (<>
+      
     <DndProvider backend={HTML5Backend}>
+      
       <div className="container">
-        <div className="form-builder">
-          <div className="draggable-item">
-            <button>
-              <span
-                draggable
+        <div className="form-builder ">
+          <div className="draggable-item chip1"  draggable
                 onDragStart={(event) => {
                   handleDragStart(event, 'Text Field');
-                }}
+                }}>
+            <button>
+              <span
+               
               >
                 Text Field
               </span>
             </button>
           </div>
-          <div className="draggable-item">
+          <div className="draggable-item chip1">
             <button>
               <span
                 draggable
@@ -75,7 +78,7 @@ const App = () => {
               </span>
             </button>
           </div>
-          <div className="draggable-item">
+          <div className="draggable-item chip1">
             <button>
               <span
                 draggable
@@ -105,6 +108,7 @@ const App = () => {
                
                 </div>
                 </DndProvider>
+                </>
                 );
                 };
                 
