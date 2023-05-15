@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useDrop, DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import './App.css';
+import Heading from './component/Headeing';
 import InputField from './component/Text';
 import Textarea from './component/Textarea';
 import RadioButton from './component/RadioButton';
@@ -21,6 +22,8 @@ const App = () => {
       handleComponentClick(<Textarea />, dropPosition);
     } else if (text === 'Radio') {
       handleComponentClick(<RadioButton />, dropPosition);
+    } else if (text === 'Heading') {
+      handleComponentClick(<Heading />, dropPosition);
     }
   };
 
@@ -87,6 +90,18 @@ const App = () => {
                 }}
               >
                 Radio
+              </span>
+            </button>
+          </div>
+          <div className="draggable-item chip1">
+            <button>
+              <span
+                draggable
+                onDragStart={(event) => {
+                  handleDragStart(event, 'Heading');
+                }}
+              >
+                Heading
               </span>
             </button>
           </div>
