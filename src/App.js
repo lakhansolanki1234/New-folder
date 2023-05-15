@@ -7,6 +7,9 @@ import InputField from './component/Text';
 import Textarea from './component/Textarea';
 import RadioButton from './component/RadioButton';
 import ResponsiveAppBar from './component/Navbar';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faTimes } from "@fortawesome/free-solid-svg-icons";
+
 const App = () => {
 
   const [formComponents, setFormComponents] = useState([]);
@@ -34,6 +37,16 @@ const App = () => {
       return updatedComponents;
     });
   };
+  
+
+  const handleDeleteComponent = (index) => {
+    setFormComponents((prevComponents) => {
+      const updatedComponents = [...prevComponents];
+      updatedComponents.splice(index, 1);
+      return updatedComponents;
+    });
+  };
+  
 
   const handleDragStart = (event, text) => {
     event.dataTransfer.setData('text/plain', text);
@@ -114,6 +127,11 @@ const App = () => {
                 className="form-component"
                 style={{ top: component.position }}
                 >
+                  <FontAwesomeIcon
+        icon={faTimes}
+        className="delete-option-icon"
+         onClick={()=> handleDeleteComponent(index)}
+      />
                 {component.component}
                 </div>
                 ))}
