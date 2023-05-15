@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState , useRef} from 'react';
 import { useDrop, DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import './App.css';
@@ -9,7 +9,7 @@ import RadioButton from './component/RadioButton';
 import ResponsiveAppBar from './component/Navbar';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTimes } from "@fortawesome/free-solid-svg-icons";
-
+import { Box } from '@mui/material';
 const App = () => {
 
   const [formComponents, setFormComponents] = useState([]);
@@ -36,9 +36,10 @@ const App = () => {
       const { x, y } = dropPosition;
       const style = { 
         position: 'absolute',
-        left: `${x-350}px`,
-        top: `${y-50}px`,
+        left: `${x-720}px`,
+        top: `${y-120}px`,
       };
+      
       updatedComponents.push({ component, style });
       return updatedComponents;
     });
@@ -69,7 +70,6 @@ const App = () => {
     console.log(formJson);
     // You can now do whatever you want with the form JSON, such as sending it to a server to save it to a database
   };
-
   return (
     <>
       <DndProvider backend={HTML5Backend}>
@@ -83,7 +83,7 @@ const App = () => {
               }}
             >
               <button>
-                <span>Text Field</span>
+                <span className='modaltext'>Text Field</span>
               </button>
             </div>
             <div
@@ -94,7 +94,7 @@ const App = () => {
               }}
             >
               <button>
-                <span>Text Area</span>
+                <span className='modaltext'>Text Area</span>
               </button>
             </div>
             <div
@@ -105,7 +105,7 @@ const App = () => {
               }}
             >
               <button>
-                <span>Radio</span>
+                <span className='modaltext'>Radio</span>
               </button>
             </div>
           <div className="draggable-item chip1">
@@ -115,6 +115,7 @@ const App = () => {
                 onDragStart={(event) => {
                   handleDragStart(event, 'Heading');
                 }}
+                className='modaltext'
               >
                 Heading
               </span>
@@ -123,17 +124,27 @@ const App = () => {
           </div>
           <div className="drop-zone whiteboard" onDrop={handleDrop} onDragOver={handleDragOver}>
             <form onSubmit={handleSubmit}>
-              {formComponents.map((component, index) => (
-                <div key={index} draggable className="form-component" style={component.style}>
-                  <FontAwesomeIcon
+            <Box sx={{display: "flex",
+  flexDirection: "row",
+  height: "100%", }}>
+     
+     <FontAwesomeIcon
         icon={faTimes}
         className="delete-option-icon"
-         onClick={()=> handleDeleteComponent(index)}
+         onClick={()=> handleDeleteComponent()}
       />
+              {formComponents.map((component, index) => (
+                <div key={index} draggable className="form-component" style={component.style}>
+                 
+      
+      
                    {component.component}
-                </div>
+                   
+                   </div>
               ))}
-              <button type="submit">Submit</button>
+              </Box>
+              <button type="submit" className='chip3' style={{width:"200px",fontSize:'20px',fontWeight:"600",padding:"17px",position:"fixed",bottom
+            :"10px"}}>Submit</button>
             </form>
           </div>
         </div>

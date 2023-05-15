@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState ,useRef,useEffect} from 'react';
 import Modal from 'react-modal';
 import edit from '../component/icons8-edit.svg'
 import { Box } from '@mui/material';
@@ -41,12 +41,95 @@ const Heading = () => {
   };
 
 
+  const draggableRef = useRef(null);
+  const buttonRef = useRef(null);
+  const [position, setPosition] = useState({ x: 0, y: 0 });
+  const [isDragging, setIsDragging] = useState(false);
+  
+  function handleDragStart2(event) {
+    event.preventDefault(); // Prevent default browser behavior
+  
+    // Calculate the offset between the mouse pointer and the top-left corner of the draggable element
+    const draggableRect = draggableRef.current.getBoundingClientRect();
+    const offset = {
+      x: event.clientX - draggableRect.left,
+      y: event.clientY - draggableRect.top
+    };
+  
+    if (event.button === 0) { // Only start dragging if the left mouse button is held down
+      setIsDragging(true);
+      setPosition(offset);
+    }
+  }
+  
+  function handleDrag(event) {
+    event.preventDefault(); // Prevent default browser behavior
+  
+    if (!isDragging) {
+      return;
+    }
+  
+    // Calculate the new position of the element relative to the mouse pointer
+    const draggableRect = draggableRef.current.getBoundingClientRect();
+    const newPosition = {
+      x: event.clientX - position.x - draggableRect.left,
+      y: event.clientY - position.y - draggableRect.top
+    };
+  
+    // Update the position of the element
+    draggableRef.current.style.left = `${newPosition.x}px`;
+    draggableRef.current.style.top = `${newPosition.y}px`;
+  }
+  
+  function handleDragEnd() {
+    setIsDragging(false);
+  }
+  
+  // Add event listeners for dragging
+  useEffect(() => {
+    if (isDragging) {
+      document.addEventListener('mousemove', handleDrag);
+      document.addEventListener('mouseup', handleDragEnd);
+    } else {
+      document.removeEventListener('mousemove', handleDrag);
+      document.removeEventListener('mouseup', handleDragEnd);
+    }
+  
+    return () => {
+      document.removeEventListener('mousemove', handleDrag);
+      document.removeEventListener('mouseup', handleDragEnd);
+    };
+  }, [isDragging]);
+  
+  // Attach the event listeners to the draggable element
+  useEffect(() => {
+    if (draggableRef.current) {
+      draggableRef.current.addEventListener('mousedown', handleDragStart2);
+    }
+  
+    return () => {
+      if (draggableRef.current) {
+        draggableRef.current.removeEventListener('mousedown', handleDragStart2);
+      }
+    };
+  }, []);
   return (
     <div className="input-field">
       <div className="input-header">
+      <div className="  font-bold py-2 px-4 rounded"
+        ref={draggableRef}
+        style={{ position: 'absolute'}}>
+        <button
+          className="bg-transparent h-10 w-10 rounded-md absolute z-10"
+          ref={buttonRef}
+          style={{ left: 'calc(0% + 20px)', top: '5px' }}
+          onMouseDown={handleDragStart2}
+        >
+          =
+        </button>
         <span className="delete-icon">x</span>
         <img src={edit} className="edit-icon" onClick={handleEditClick}/>
-      </div>
+      
       <Box sx={{display: "flex",
   flexDirection: "row",
   height: "100%", }}>
@@ -59,6 +142,9 @@ const Heading = () => {
 
       </div>
      </Box>
+     
+</div>
+     </div>
       <Modal
         isOpen={isModalOpen}
         onRequestClose={closeModal}
@@ -67,83 +153,94 @@ const Heading = () => {
         overlayClassName="modal-overlay"
       >
         <form>
-        <h2>Edit Input Field</h2>
+  <h2 className='chip3' >Edit Heading Field</h2>
         <div className='modal-row'>
-        <label>
+        <label className='modaltext'>
            Label
-            <input type="text" value={label} onChange={(e)=> setlabel(e.target.value)}/>
-          </label>
+           </label>
+            <input type="text" className='chip2' value={label} onChange={(e)=> setlabel(e.target.value)}/>
+         
         </div>
         <div className="modal-row">
           
-          <label>
+          <label className='modaltext'>
            Label Width
-            <input type="text" value={lwidth} onChange={(e)=> setlwidth(e.target.value)}/>
-          </label>
+           </label>
+            <input type="text" className='chip2' value={lwidth} onChange={(e)=> setlwidth(e.target.value)}/>
+         
         </div>
        
         <div className="modal-row">
-          <label>
+          <label className='modaltext'>
            Label Height
-            <input type="text"  value={lheight} onChange={(e)=> setlheight(e.target.value)}/>
           </label>
+
+            <input type="text" className='chip2' value={lheight} onChange={(e)=> setlheight(e.target.value)}/>
         </div>
         <div className="modal-row">
           
-          <label>
-           width
-            <input type="text" value={width} onChange={(e)=> setwidth(e.target.value)}/>
-          </label>
+          <label className='modaltext'>
+           Width
+           </label>
+            <input type="text" className='chip2' value={width} onChange={(e)=> setwidth(e.target.value)}/>
+          
         </div>
        
         <div className="modal-row">
-          <label>
+          <label className='modaltext'>
            Height
-            <input type="text"  value={height} onChange={(e)=> setheight(e.target.value)}/>
-          </label>
+           </label>
+            <input type="text" className='chip2' value={height} onChange={(e)=> setheight(e.target.value)}/>
+         
         </div>
         <div className="modal-row">
-            <label>
+            <label className='modaltext'>
               Font:
-              <select value={font} onChange={handleFontChange}>
+              </label>
+              <select value={font} className='chip2' onChange={handleFontChange}>
                 <option value="Arial">Arial</option>
                 <option value="Helvetica">Helvetica</option>
                 <option value="Times New Roman">Times New Roman</option>
                 <option value="Courier New">Courier New</option>
                 <option value="Verdana">Verdana</option>
               </select>
-            </label>
+            
           </div>
           <div className="modal-row">
-          <label>
+          <label className='modaltext'>
             Font Size:
-            <input type="number" value={fontsize} onChange={(e)=>setfontsize(e.target.value)}/>px
-          </label>
+            </label>
+            <input type="number" className='chip2' value={fontsize} onChange={(e)=>setfontsize(e.target.value)}/>px
+          
         </div>
           <div className="modal-row">
-  <label>
+  <label className='modaltext'>
     Text Color
-    <input type="color" value={backgroundColor1} onChange={(e) => handleBackgroundColorChange(e?.target?.value)} />
-  </label>
+    </label>
+    <input type="color" className='chip2' value={backgroundColor1} onChange={(e) => handleBackgroundColorChange(e?.target?.value)} />
+  
 </div>
 <div className="modal-row">
-  <label>
+  <label className='modaltext'>
     Background Color
-    <input type="color" value={backgroundColor2} onChange={(e) => handleBackgroundColorChange2(e?.target?.value)} />
-  </label>
+    </label>
+    <input type="color" className='chip2' value={backgroundColor2} onChange={(e) => handleBackgroundColorChange2(e?.target?.value)} />
+  
 </div>
         <div className="modal-row">
-          <label>
+          <label className='modaltext'>
             Class:
-            <input type="text" value={clas} onChange={(e)=> setclasses(e.target.value)} />
-          </label>
+            </label>
+            <input type="text" className='chip2' value={clas} onChange={(e)=> setclasses(e.target.value)} />
+         
         </div>
   
         <div className="modal-row">
-          <label>
+          <label className='modaltext'>
             Max Length:
-            <input type="number" />
-          </label>
+            </label>
+            <input type="number" className='chip2' />
+          
         </div>
         <button onClick={closeModal} >Close</button>
         <button type='submit'>Submit</button>
