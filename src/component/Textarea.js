@@ -57,9 +57,17 @@ const Textarea = () => {
     };
   
     if (event.button === 0) { // Only start dragging if the left mouse button is held down
-      setIsDragging(true);
-      setPosition(offset);
+      // Save the starting position of the drag
+      setPosition({
+        x: event.clientX,
+        y: event.clientY
+      });
     }
+  
+    // Save the offset and add event listeners for dragging
+    setPosition(offset);
+    document.addEventListener('mousemove', handleDrag);
+    document.addEventListener('mouseup', handleDragEnd);
   }
   
   function handleDrag(event) {
@@ -72,8 +80,8 @@ const Textarea = () => {
     // Calculate the new position of the element relative to the mouse pointer
     const draggableRect = draggableRef.current.getBoundingClientRect();
     const newPosition = {
-      x: event.clientX - position.x - draggableRect.left,
-      y: event.clientY - position.y - draggableRect.top
+      x: event.clientX - position.x,
+      y: event.clientY - position.y 
     };
   
     // Update the position of the element
@@ -81,38 +89,16 @@ const Textarea = () => {
     draggableRef.current.style.top = `${newPosition.y}px`;
   }
   
+
+  // Add event listeners for dragging
+ 
   function handleDragEnd() {
-    setIsDragging(false);
+    // Remove event listeners for dragging
+    document.removeEventListener('mousemove', handleDrag);
+    document.removeEventListener('mouseup', handleDragEnd);
   }
   
-  // Add event listeners for dragging
-  useEffect(() => {
-    if (isDragging) {
-      document.addEventListener('mousemove', handleDrag);
-      document.addEventListener('mouseup', handleDragEnd);
-    } else {
-      document.removeEventListener('mousemove', handleDrag);
-      document.removeEventListener('mouseup', handleDragEnd);
-    }
-  
-    return () => {
-      document.removeEventListener('mousemove', handleDrag);
-      document.removeEventListener('mouseup', handleDragEnd);
-    };
-  }, [isDragging]);
-  
-  // Attach the event listeners to the draggable element
-  useEffect(() => {
-    if (draggableRef.current) {
-      draggableRef.current.addEventListener('mousedown', handleDragStart2);
-    }
-  
-    return () => {
-      if (draggableRef.current) {
-        draggableRef.current.removeEventListener('mousedown', handleDragStart2);
-      }
-    };
-  }, []);
+ 
   return (
     <div className="input-field">
       <div className="input-header">
@@ -138,7 +124,7 @@ const Textarea = () => {
       <label style={{fontFamily:`${font}`,fontSize:`${fontsize}px`,textAlign:"center"}}>{label}</label>
       </div>
       <div style={{ flex: "1" }}>
-      <textarea type="text" style={{width:`${width}`,height:`${height}`,fontFamily:`${font}`,fontSize:`${fontsize-2}px`,color:`${backgroundColor1}`, background:`${backgroundColor2}`,textAlign:`${textalign}`}} className={`${clas}`} placeholder={`${placeholder}`} />
+      <textarea type="text" style={{width:`${width}`,height:`${height}`,fontFamily:`${font}`,fontSize:`${fontsize-2}px`,color:`${backgroundColor1}`, background:`${backgroundColor2}`,textAlign:`${textalign}`}} className={`${clas}`} placeholder={`${placeholder}`} ></textarea>
       </div>
       </Box>
       </div>
