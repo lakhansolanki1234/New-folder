@@ -63,9 +63,10 @@ const Textarea = () => {
         isOpen={isModalOpen}
         onRequestClose={closeModal}
         contentLabel="Edit Input Field"
-        className="editboard"
+        className="editboard "
         overlayClassName="modal-overlay"
       >
+       =
         <form>
         <h2>Edit Input Field</h2>
         <div className='modal-row'>
@@ -81,7 +82,6 @@ const Textarea = () => {
             <input type="text" value={lwidth} onChange={(e)=> setlwidth(e.target.value)}/>
           </label>
         </div>
-       
         <div className="modal-row">
           <label>
            Label Height

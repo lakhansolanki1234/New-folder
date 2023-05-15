@@ -5,7 +5,7 @@ import { Box } from '@mui/material';
 
 Modal.setAppElement('#root'); // Set the app root element for accessibility
 
-const InputField = () => {
+const InputField = ({ dropPosition }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const[width,setwidth]=useState('300px');
   const[height,setheight]=useState('40px');
@@ -42,7 +42,7 @@ const InputField = () => {
 
 
   return (
-    <div className="input-field">
+    <div className="input-field" style={{ position: 'absolute' }}>
       <div className="input-header">
         <span className="delete-icon">x</span>
         <img src={edit} className="edit-icon" onClick={handleEditClick}/>
