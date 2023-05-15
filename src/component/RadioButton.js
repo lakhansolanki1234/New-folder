@@ -1,11 +1,22 @@
 import React, { useState } from 'react';
 import Modal from 'react-modal';
-
+import { Box } from '@mui/material';
 Modal.setAppElement('#root'); // Set the app root element for accessibility
 
 const RadioButton = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [size,setsize]=useState('');
+  const[width,setwidth]=useState('300px');
+  const[height,setheight]=useState('40px');
+  const[lwidth,setlwidth]=useState('200px');
+  const[lheight,setlheight]=useState('50px');
+  const[clas,setclasses]=useState('form__input')
+  const [font, setFont] = useState('Arial');
+  const [label, setlabel]=useState('Enter Label')
+  const [backgroundColor1, setBackgroundColor] = useState('rgb(0, 0, 0)');
+  const [backgroundColor2, setBackgroundColor2] = useState('rgb(230, 229, 229)');
+  const [placeholder,setplaceholder]=useState('')
+  const [fontsize,setfontsize]=useState("24")
 
   const handleEditClick = () => {
     setIsModalOpen(true);
@@ -21,7 +32,15 @@ const RadioButton = () => {
         <span className="delete-icon">x</span>
         <span className="edit-icon" onClick={handleEditClick}>Edit</span>
       </div>
+      <Box sx={{display: "flex",
+  flexDirection: "row",
+  height: "100%", }}>
+        <div style={{width:`${lwidth}`,height:`${lheight}`,display: "flex", alignItems: "start" }}>
+      <label style={{fontFamily:`${font}`,fontSize:`${fontsize}px`,textAlign:"center"}}>{label}</label>
+      </div>
+      <div style={{ display:"flex", margin:"10px" }}>
       <div>
+      
       <input type="radio" name="radio-group-1681197254001-0" value="option-1" />
       <label>Option 1</label>
       </div>
@@ -33,8 +52,8 @@ const RadioButton = () => {
       <input type="radio" name="radio-group-1681197254001-0" value="option-3" />
       <label>Option 3</label>
       </div>
-      
-
+      </div>
+      </Box>
       <Modal
         isOpen={isModalOpen}
         onRequestClose={closeModal}

@@ -1,17 +1,22 @@
 import React, { useState } from 'react';
 import Modal from 'react-modal';
 import edit from '../component/icons8-edit.svg'
-
+import { Box } from '@mui/material';
 Modal.setAppElement('#root'); // Set the app root element for accessibility
 
 const InputField = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const[width,setwidth]=useState('300px');
-  const[height,setheight]=useState('30px');
+  const[height,setheight]=useState('40px');
+  const[lwidth,setlwidth]=useState('200px');
+  const[lheight,setlheight]=useState('50px');
   const[clas,setclasses]=useState('form__input')
   const [font, setFont] = useState('Arial');
-  const [backgroundColor1, setBackgroundColor] = useState('rgb(255, 255, 255)');
-
+  const [label, setlabel]=useState('Enter Label')
+  const [backgroundColor1, setBackgroundColor] = useState('rgb(0, 0, 0)');
+  const [backgroundColor2, setBackgroundColor2] = useState('rgb(230, 229, 229)');
+  const [placeholder,setplaceholder]=useState('')
+  const [fontsize,setfontsize]=useState("24")
 
   const handleEditClick = () => {
     setIsModalOpen(true);
@@ -28,6 +33,11 @@ const InputField = () => {
       setBackgroundColor(value);
     }
   };
+  const handleBackgroundColorChange2 = (value) => {
+    if (value) {
+      setBackgroundColor2(value);
+    }
+  };
 
 
   return (
@@ -36,8 +46,17 @@ const InputField = () => {
         <span className="delete-icon">x</span>
         <img src={edit} className="edit-icon" onClick={handleEditClick}/>
       </div>
-      <input type="text" style={{width:`${width}`,height:`${height}`,fontFamily:`${font}`,color:`${backgroundColor1}`}} className={`${clas}`} />
-
+      <Box sx={{display: "flex",
+  flexDirection: "row",
+  height: "100%", }}>
+         <div style={{width:`${lwidth}`,height:`${lheight}`,display: "flex"}}>
+        
+      <label style={{fontFamily:`${font}`,fontSize:`${fontsize}px`}}>{label}</label>
+      </div>
+      <div style={{ flex: "1" }}>
+      <input type="text" style={{width:`${width}`,height:`${height}`,fontFamily:`${font}`,fontSize:`${fontsize-2}px`,color:`${backgroundColor1}`, background:`${backgroundColor2}`}} className={`${clas}`} placeholder={`${placeholder}`}/>
+      </div>
+     </Box>
       <Modal
         isOpen={isModalOpen}
         onRequestClose={closeModal}
@@ -47,6 +66,12 @@ const InputField = () => {
       >
         <form>
         <h2>Edit Input Field</h2>
+        <div className='modal-row'>
+        <label>
+           Label
+            <input type="text" value={label} onChange={(e)=> setlabel(e.target.value)}/>
+          </label>
+        </div>
         <div className="modal-row">
           <label>
             Required:
@@ -54,11 +79,27 @@ const InputField = () => {
           </label>
         </div>
         <div className="modal-row">
+          
+          <label>
+           Label Width
+            <input type="text" value={lwidth} onChange={(e)=> setlwidth(e.target.value)}/>
+          </label>
+        </div>
+       
+        <div className="modal-row">
+          <label>
+           Label Height
+            <input type="text"  value={lheight} onChange={(e)=> setlheight(e.target.value)}/>
+          </label>
+        </div>
+        <div className="modal-row">
+          
           <label>
            width
             <input type="text" value={width} onChange={(e)=> setwidth(e.target.value)}/>
           </label>
         </div>
+       
         <div className="modal-row">
           <label>
            Height
@@ -78,22 +119,29 @@ const InputField = () => {
             </label>
           </div>
           <div className="modal-row">
+          <label>
+            Font Size:
+            <input type="number" value={fontsize} onChange={(e)=>setfontsize(e.target.value)}/>px
+          </label>
+        </div>
+          <div className="modal-row">
   <label>
     Text Color
     <input type="color" value={backgroundColor1} onChange={(e) => handleBackgroundColorChange(e?.target?.value)} />
   </label>
 </div>
+<div className="modal-row">
+  <label>
+    Background Color
+    <input type="color" value={backgroundColor2} onChange={(e) => handleBackgroundColorChange2(e?.target?.value)} />
+  </label>
+</div>
 
-        <div className="modal-row">
-          <label>
-            Help Text:
-            <input type="text" />
-          </label>
-        </div>
+       
         <div className="modal-row">
           <label>
             Placeholder:
-            <input type="text" />
+            <input type="text"  value={placeholder} onChange={(e)=> setplaceholder(e.target.value)}/>
           </label>
         </div>
         <div className="modal-row">
@@ -102,12 +150,7 @@ const InputField = () => {
             <input type="text" value={clas} onChange={(e)=> setclasses(e.target.value)} />
           </label>
         </div>
-        <div className="modal-row">
-          <label>
-            Name:
-            <input type="text" />
-          </label>
-        </div>
+        
        
         <div className="modal-row">
           <label>
@@ -115,12 +158,7 @@ const InputField = () => {
             <input type="text" />
           </label>
         </div>
-        <div className="modal-row">
-          <label>
-            Type:
-            <input type="text" />
-          </label>
-        </div>
+       
         <div className="modal-row">
           <label>
             Max Length:
