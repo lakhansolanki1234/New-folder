@@ -63,6 +63,12 @@
   padding: 10px;
 }
 
+.delete-option-icon {
+  margin-left: 5px;
+  color: red;
+  cursor: pointer;
+}
+
 
 
 

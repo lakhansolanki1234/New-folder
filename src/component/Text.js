@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import Modal from 'react-modal';
 import edit from '../component/icons8-edit.svg'
 import { Box } from '@mui/material';
+
 Modal.setAppElement('#root'); // Set the app root element for accessibility
 
 const InputField = () => {
