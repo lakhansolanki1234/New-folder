@@ -31,6 +31,9 @@ const Textarea = () => {
   const handletextalign = (e) => {
     settextalign(e.target.value);
   };
+  const handleClassChange = (e) => {
+    setclasses(e.target.value);
+  };
   const handleBackgroundColorChange = (value) => {
     if (value) {
       setBackgroundColor(value);
@@ -44,11 +47,7 @@ const Textarea = () => {
   const draggableRef = useRef(null);
   const buttonRef = useRef(null);
   const [position, setPosition] = useState({ x: 0, y: 0 });
-  const [isDragging, setIsDragging] = useState(false);
-  
   function handleDragStart2(event) {
-    event.preventDefault(); // Prevent default browser behavior
-  
     // Calculate the offset between the mouse pointer and the top-left corner of the draggable element
     const draggableRect = draggableRef.current.getBoundingClientRect();
     const offset = {
@@ -58,9 +57,10 @@ const Textarea = () => {
   
     if (event.button === 0) { // Only start dragging if the left mouse button is held down
       // Save the starting position of the drag
+      const draggableRect = draggableRef.current.getBoundingClientRect();
       setPosition({
-        x: event.clientX,
-        y: event.clientY
+        x: event.clientX-draggableRect.left,
+        y: event.clientY-draggableRect.top
       });
     }
   
@@ -71,24 +71,22 @@ const Textarea = () => {
   }
   
   function handleDrag(event) {
-    event.preventDefault(); // Prevent default browser behavior
-  
-    if (!isDragging) {
-      return;
-    }
-  
     // Calculate the new position of the element relative to the mouse pointer
-    const draggableRect = draggableRef.current.getBoundingClientRect();
     const newPosition = {
-      x: event.clientX - position.x,
-      y: event.clientY - position.y 
+      x: event.clientX - position.x - 570,
+      y: event.clientY - position.y - 220
     };
   
-    // Update the position of the element
-    draggableRef.current.style.left = `${newPosition.x}px`;
-    draggableRef.current.style.top = `${newPosition.y}px`;
+    // Update the position of the element using optional chaining
+    draggableRef.current?.style?.setProperty('left', `${newPosition.x}px`);
+    draggableRef.current?.style?.setProperty('top', `${newPosition.y}px`);
   }
   
+  function handleDragEnd() {
+    // Remove event listeners for dragging
+    document.removeEventListener('mousemove', handleDrag);
+    document.removeEventListener('mouseup', handleDragEnd);
+  }
 
   // Add event listeners for dragging
  
@@ -98,9 +96,14 @@ const Textarea = () => {
     document.removeEventListener('mouseup', handleDragEnd);
   }
   
- 
+  const [isVisible, setIsVisible] = useState(true);
+
+  const handleDeleteClick = () => {
+    console.log("ttt")
+    setIsVisible(false);
+  };
   return (
-    <div className="input-field">
+    <div className={`my-component ${isVisible ? 'input-field' : 'hidden'}`} >
       <div className="input-header">
       <div className="  font-bold py-2 px-4 rounded"
         ref={draggableRef}
@@ -113,7 +116,7 @@ const Textarea = () => {
         >
           =
         </button>
-        <span className="delete-icon">x</span>
+        <span className="delete-icon" onClick={handleDeleteClick}>x</span>
         <span className="edit-icon" onClick={handleEditClick}>Edit</span>
      
       
@@ -187,18 +190,22 @@ const Textarea = () => {
           
         </div>
         <div className="modal-row">
-            <label className='modaltext'>
-              Font:
-              </label>
-              <select value={font} className='chip2' onChange={handleFontChange}>
-                <option value="Arial">Arial</option>
-                <option value="Helvetica">Helvetica</option>
-                <option value="Times New Roman">Times New Roman</option>
-                <option value="Courier New">Courier New</option>
-                <option value="Verdana">Verdana</option>
-              </select>
-            
-          </div>
+  <label className='modaltext'>
+    Font:
+  </label>
+  <select value={font} className='chip2' onChange={handleFontChange}>
+    <option value="Arial">Arial</option>
+    <option value="Helvetica">Helvetica</option>
+    <option value="Times New Roman">Times New Roman</option>
+    <option value="Courier New">Courier New</option>
+    <option value="Verdana">Verdana</option>
+    <option value="Open Sans">Open Sans</option>
+    <option value="Roboto">Roboto</option>
+    <option value="Montserrat">Montserrat</option>
+    <option value="Lato">Lato</option>
+    <option value="Source Sans Pro">Source Sans Pro</option>
+  </select>
+</div>
           <div className="modal-row">
           <label className='modaltext'>
             Font Size:
@@ -233,8 +240,15 @@ const Textarea = () => {
           <label className='modaltext'>
             Class:
             </label>
-            <input type="text" className='chip2' value={clas} onChange={(e)=> setclasses(e.target.value)} />
-         
+           
+            <select value={clas} className='chip2' onChange={handleClassChange}>
+                <option value="form__input">form__input</option>
+                <option value="effect-3">Effect 1</option>
+                <option value="effect-7">Effect 2</option>
+                <option value="effect-10">Effect 3</option>
+                <option value="roundedinput">Simple Rounded</option>
+              </select>
+        
         </div>
         
        

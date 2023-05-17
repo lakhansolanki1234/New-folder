@@ -19,6 +19,7 @@ const InputField = ({ dropPosition }) => {
   const [label, setlabel]=useState('Enter Label')
   const [backgroundColor1, setBackgroundColor] = useState('rgb(0, 0, 0)');
   const [backgroundColor2, setBackgroundColor2] = useState('rgb(230, 229, 229)');
+  const [backgroundColor3, setBackgroundColor3] = useState('rgb(0, 0, 0)');
   const [placeholder,setplaceholder]=useState('')
   const [fontsize,setfontsize]=useState("24")
   
@@ -33,6 +34,9 @@ const InputField = ({ dropPosition }) => {
   const handleFontChange = (e) => {
     setFont(e.target.value);
   };
+  const handleClassChange = (e) => {
+    setclasses(e.target.value);
+  };
   const handleBackgroundColorChange = (value) => {
     if (value) {
       setBackgroundColor(value);
@@ -41,6 +45,11 @@ const InputField = ({ dropPosition }) => {
   const handleBackgroundColorChange2 = (value) => {
     if (value) {
       setBackgroundColor2(value);
+    }
+  };
+  const handleBackgroundColorChange3 = (value) => {
+    if (value) {
+      setBackgroundColor3(value);
     }
   };
 
@@ -111,7 +120,7 @@ const InputField = ({ dropPosition }) => {
   height: "100%", }}>
          <div style={{width:`${lwidth}`,height:`${lheight}`,display: "flex"}}>
         
-      <label style={{fontFamily:`${font}`,fontSize:`${fontsize}px`}}>{label}</label>
+      <label style={{fontFamily:`${font}`,fontSize:`${fontsize}px`,color:`${backgroundColor3}`,}}>{label}</label>
       </div>
       <div style={{ flex: "1" }}>
       <input type="text" style={{width:`${width}`,height:`${height}`,fontFamily:`${font}`,fontSize:`${fontsize-2}px`,color:`${backgroundColor1}`, background:`${backgroundColor2}`}} className={`${clas}`} placeholder={`${placeholder}`}/>
@@ -158,6 +167,13 @@ const InputField = ({ dropPosition }) => {
             <input type="text"  className='chip2' value={lheight} onChange={(e)=> setlheight(e.target.value)}/>
           
         </div>
+        <div className="modal-row">
+  <label className='modaltext'>
+    Label Color
+    </label>
+    <input type="color" className='chip2' value={backgroundColor3} onChange={(e) => handleBackgroundColorChange3(e?.target?.value)} />
+  
+</div>
         <div className="modal-row">
           
           <label className='modaltext'>
@@ -221,7 +237,14 @@ const InputField = ({ dropPosition }) => {
           <label className='modaltext'>
             Class:
             </label>
-            <input type="text" className='chip2' value={clas} onChange={(e)=> setclasses(e.target.value)} />
+           
+            <select value={clas} className='chip2' onChange={handleClassChange}>
+                <option value="form__input">form__input</option>
+                <option value="effect-3">Effect 1</option>
+                <option value="effect-7">Effect 2</option>
+                <option value="effect-10">Effect 3</option>
+                <option value="roundedinput">Simple Rounded</option>
+              </select>
         
         </div>
         

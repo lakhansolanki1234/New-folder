@@ -53,14 +53,11 @@ const RadioButton = () => {
     const newOption = { id: newOptionId, value: `Option ${newOptionId}` };
     setOptions([...options, newOption]);
   };
+
   const draggableRef = useRef(null);
   const buttonRef = useRef(null);
   const [position, setPosition] = useState({ x: 0, y: 0 });
-  const [isDragging, setIsDragging] = useState(false);
-  
   function handleDragStart2(event) {
-    event.preventDefault(); // Prevent default browser behavior
-  
     // Calculate the offset between the mouse pointer and the top-left corner of the draggable element
     const draggableRect = draggableRef.current.getBoundingClientRect();
     const offset = {
@@ -69,62 +66,45 @@ const RadioButton = () => {
     };
   
     if (event.button === 0) { // Only start dragging if the left mouse button is held down
-      setIsDragging(true);
-      setPosition(offset);
+      // Save the starting position of the drag
+      const draggableRect = draggableRef.current.getBoundingClientRect();
+      setPosition({
+        x: event.clientX-draggableRect.left,
+        y: event.clientY-draggableRect.top
+      });
     }
+  
+    // Save the offset and add event listeners for dragging
+    setPosition(offset);
+    document.addEventListener('mousemove', handleDrag);
+    document.addEventListener('mouseup', handleDragEnd);
   }
   
   function handleDrag(event) {
-    event.preventDefault(); // Prevent default browser behavior
-  
-    if (!isDragging) {
-      return;
-    }
-  
     // Calculate the new position of the element relative to the mouse pointer
-    const draggableRect = draggableRef.current.getBoundingClientRect();
     const newPosition = {
-      x: event.clientX - position.x - draggableRect.left,
-      y: event.clientY - position.y - draggableRect.top
+      x: event.clientX - position.x -500 ,
+      y: event.clientY - position.y -200
     };
   
-    // Update the position of the element
-    draggableRef.current.style.left = `${newPosition.x}px`;
-    draggableRef.current.style.top = `${newPosition.y}px`;
+    // Update the position of the element using optional chaining
+    draggableRef.current?.style?.setProperty('left', `${newPosition.x}px`);
+    draggableRef.current?.style?.setProperty('top', `${newPosition.y}px`);
   }
   
   function handleDragEnd() {
-    setIsDragging(false);
+    // Remove event listeners for dragging
+    document.removeEventListener('mousemove', handleDrag);
+    document.removeEventListener('mouseup', handleDragEnd);
   }
-  
+
   // Add event listeners for dragging
-  useEffect(() => {
-    if (isDragging) {
-      document.addEventListener('mousemove', handleDrag);
-      document.addEventListener('mouseup', handleDragEnd);
-    } else {
-      document.removeEventListener('mousemove', handleDrag);
-      document.removeEventListener('mouseup', handleDragEnd);
-    }
-  
-    return () => {
-      document.removeEventListener('mousemove', handleDrag);
-      document.removeEventListener('mouseup', handleDragEnd);
-    };
-  }, [isDragging]);
-  
-  // Attach the event listeners to the draggable element
-  useEffect(() => {
-    if (draggableRef.current) {
-      draggableRef.current.addEventListener('mousedown', handleDragStart2);
-    }
-  
-    return () => {
-      if (draggableRef.current) {
-        draggableRef.current.removeEventListener('mousedown', handleDragStart2);
-      }
-    };
-  }, []);
+ 
+  function handleDragEnd() {
+    // Remove event listeners for dragging
+    document.removeEventListener('mousemove', handleDrag);
+    document.removeEventListener('mouseup', handleDragEnd);
+  }
   return (
     <div className="input-field">
       <div className="input-header">
@@ -146,8 +126,8 @@ const RadioButton = () => {
       <Box sx={{display:"block",
   flexDirection: "row",
   height: "100%", }}>
-        <div style={{width:`${lwidth}`,height:`${lheight}`,display: "flex", alignItems: "start" }}>
-      <label style={{fontFamily:`${font}`,fontSize:`${fontsize}px`,textAlign:"center"}}>{label}</label>
+        <div style={{width:`${lwidth}`,height:`${lheight}`,color:`${backgroundColor1}` ,display: "flex", alignItems: "start" }}>
+      <label style={{fontFamily:`${font}`,fontSize:`${fontsize}px`,color:`${backgroundColor1}`,textAlign:"center"}}>{label}</label>
       </div>
       <div style={{ margin: "10px" }}>
             {options.map((option) => (
@@ -158,7 +138,7 @@ const RadioButton = () => {
                   value={option.value}
                   style={{ margin: "5px", backgroundColor: backgroundColor1 }}
                 />
-                <label style={{fontFamily:`${font}`,fontSize:`${fontsize}px`,textAlign:"center"}}>{option.value}</label>
+                <label style={{fontFamily:`${font}`,fontSize:`${fontsize}px`,textAlign:"center",color:`${backgroundColor1}`}}>{option.value}</label>
               </div>
             ))}
           </div>
@@ -220,18 +200,22 @@ const RadioButton = () => {
           
         </div>
         <div className="modal-row">
-            <label className='modaltext'>
-              Font:
-              </label>
-              <select value={font}  className="chip2" onChange={handleFontChange}>
-                <option value="Arial">Arial</option>
-                <option value="Helvetica">Helvetica</option>
-                <option value="Times New Roman">Times New Roman</option>
-                <option value="Courier New">Courier New</option>
-                <option value="Verdana">Verdana</option>
-              </select>
-            
-          </div>
+  <label className='modaltext'>
+    Font:
+  </label>
+  <select value={font} className='chip2' onChange={handleFontChange}>
+    <option value="Arial">Arial</option>
+    <option value="Helvetica">Helvetica</option>
+    <option value="Times New Roman">Times New Roman</option>
+    <option value="Courier New">Courier New</option>
+    <option value="Verdana">Verdana</option>
+    <option value="Open Sans">Open Sans</option>
+    <option value="Roboto">Roboto</option>
+    <option value="Montserrat">Montserrat</option>
+    <option value="Lato">Lato</option>
+    <option value="Source Sans Pro">Source Sans Pro</option>
+  </select>
+</div>
           <div className="modal-row">
           <label className='modaltext'>
             Font Size:

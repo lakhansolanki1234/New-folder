@@ -18,7 +18,7 @@ const Heading = () => {
   const [backgroundColor2, setBackgroundColor2] = useState('rgb(230, 229, 229)');
   const [placeholder,setplaceholder]=useState('')
   const [fontsize,setfontsize]=useState("24")
-
+  const [fontWeight2,setFontWeight]=useState("500")
   const handleEditClick = () => {
     setIsModalOpen(true);
   };
@@ -28,6 +28,10 @@ const Heading = () => {
   };
   const handleFontChange = (e) => {
     setFont(e.target.value);
+  };
+  const handleFontWeightChange = (e) => {
+    setFontWeight(e.target.value);
+    console.log(fontWeight2)
   };
   const handleBackgroundColorChange = (value) => {
     if (value) {
@@ -40,79 +44,57 @@ const Heading = () => {
     }
   };
 
-
   const draggableRef = useRef(null);
   const buttonRef = useRef(null);
   const [position, setPosition] = useState({ x: 0, y: 0 });
-  const [isDragging, setIsDragging] = useState(false);
-  
   function handleDragStart2(event) {
-    event.preventDefault(); // Prevent default browser behavior
-  
     // Calculate the offset between the mouse pointer and the top-left corner of the draggable element
     const draggableRect = draggableRef.current.getBoundingClientRect();
     const offset = {
       x: event.clientX - draggableRect.left,
       y: event.clientY - draggableRect.top
     };
-  
+    console.log(offset)
     if (event.button === 0) { // Only start dragging if the left mouse button is held down
-      setIsDragging(true);
-      setPosition(offset);
+      // Save the starting position of the drag
+      const draggableRect = draggableRef.current.getBoundingClientRect();
+      setPosition({
+        x: event.clientX-draggableRect.left,
+        y: event.clientY-draggableRect.top
+      });
     }
+  
+    // Save the offset and add event listeners for dragging
+    setPosition(offset);
+    document.addEventListener('mousemove', handleDrag);
+    document.addEventListener('mouseup', handleDragEnd);
   }
   
   function handleDrag(event) {
-    event.preventDefault(); // Prevent default browser behavior
-  
-    if (!isDragging) {
-      return;
-    }
-  
     // Calculate the new position of the element relative to the mouse pointer
-    const draggableRect = draggableRef.current.getBoundingClientRect();
     const newPosition = {
-      x: event.clientX - position.x - draggableRect.left,
-      y: event.clientY - position.y - draggableRect.top
+      x: event.clientX - position.x -500,
+      y: event.clientY - position.y -200
     };
   
-    // Update the position of the element
-    draggableRef.current.style.left = `${newPosition.x}px`;
-    draggableRef.current.style.top = `${newPosition.y}px`;
+    // Update the position of the element using optional chaining
+    draggableRef.current?.style?.setProperty('left', `${newPosition.x}px`);
+    draggableRef.current?.style?.setProperty('top', `${newPosition.y}px`);
   }
   
   function handleDragEnd() {
-    setIsDragging(false);
+    // Remove event listeners for dragging
+    document.removeEventListener('mousemove', handleDrag);
+    document.removeEventListener('mouseup', handleDragEnd);
   }
-  
+
   // Add event listeners for dragging
-  useEffect(() => {
-    if (isDragging) {
-      document.addEventListener('mousemove', handleDrag);
-      document.addEventListener('mouseup', handleDragEnd);
-    } else {
-      document.removeEventListener('mousemove', handleDrag);
-      document.removeEventListener('mouseup', handleDragEnd);
-    }
-  
-    return () => {
-      document.removeEventListener('mousemove', handleDrag);
-      document.removeEventListener('mouseup', handleDragEnd);
-    };
-  }, [isDragging]);
-  
-  // Attach the event listeners to the draggable element
-  useEffect(() => {
-    if (draggableRef.current) {
-      draggableRef.current.addEventListener('mousedown', handleDragStart2);
-    }
-  
-    return () => {
-      if (draggableRef.current) {
-        draggableRef.current.removeEventListener('mousedown', handleDragStart2);
-      }
-    };
-  }, []);
+ 
+  function handleDragEnd() {
+    // Remove event listeners for dragging
+    document.removeEventListener('mousemove', handleDrag);
+    document.removeEventListener('mouseup', handleDragEnd);
+  }
   return (
     <div className="input-field">
       <div className="input-header">
@@ -135,10 +117,10 @@ const Heading = () => {
   height: "100%", }}>
          <div style={{width:`${lwidth}`,height:`${lheight}`,display: "flex"}}>
         
-      <label style={{fontFamily:`${font}`,fontSize:`${fontsize}px`}}>{label}</label>
+      <label style={{fontFamily:`${font}`,fontSize:`${fontsize}px`, fontWeight:`${fontWeight2}`}}>{label}</label>
       </div>
       <div style={{ flex: "1" }}>
-      <span style={{ width: `${width}`, height: `${height}`, fontFamily: `${font}`, fontSize: `${fontsize - 2}px`, color: `${backgroundColor1}`, background: `${backgroundColor2}` }} className={`${clas}`} contentEditable>{placeholder}</span>
+      <span style={{ width: `${width}`, height: `${height}`, fontFamily: `${font}`, fontSize: `${fontsize - 2}px`, color: `${backgroundColor1}`, background: `${backgroundColor2}`, fontWeight:`${fontWeight2}` }} className={`${clas}`} contentEditable>{placeholder}</span>
 
       </div>
      </Box>
@@ -194,18 +176,41 @@ const Heading = () => {
          
         </div>
         <div className="modal-row">
-            <label className='modaltext'>
-              Font:
-              </label>
-              <select value={font} className='chip2' onChange={handleFontChange}>
-                <option value="Arial">Arial</option>
-                <option value="Helvetica">Helvetica</option>
-                <option value="Times New Roman">Times New Roman</option>
-                <option value="Courier New">Courier New</option>
-                <option value="Verdana">Verdana</option>
-              </select>
-            
-          </div>
+  <label className='modaltext'>
+    Font:
+  </label>
+  <select value={font} className='chip2' onChange={handleFontChange}>
+    <option value="Arial">Arial</option>
+    <option value="Helvetica">Helvetica</option>
+    <option value="Times New Roman">Times New Roman</option>
+    <option value="Courier New">Courier New</option>
+    <option value="Verdana">Verdana</option>
+    <option value="Open Sans">Open Sans</option>
+    <option value="Roboto">Roboto</option>
+    <option value="Montserrat">Montserrat</option>
+    <option value="Lato">Lato</option>
+    <option value="Source Sans Pro">Source Sans Pro</option>
+  </select>
+</div>
+<div className="modal-row">
+  <label className='modaltext'>
+    Font Weight:
+  </label>
+  <select value={fontWeight2} className='chip2' onChange={handleFontWeightChange}>
+ 
+    <option value="100">100</option>
+    <option value="200">200</option>
+    <option value="300">300</option>
+    <option value="400">400</option>
+    <option value="500">500</option>
+    <option value="600">600</option>
+    <option value="700">700</option>
+    <option value="800">800</option>
+    <option value="900">900</option>
+  </select>
+</div>
+
+
           <div className="modal-row">
           <label className='modaltext'>
             Font Size:
